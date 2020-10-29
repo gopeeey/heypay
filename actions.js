@@ -44,32 +44,43 @@ export const authLogin = (phone, password, stay) => {
     })
       .then(res => {
         if (!res.data.error) {
-          if (res.data.authentication.registered) {
-            if (stay) {
-              const cookies = new Cookies;
-              const token = res.data.authentication.token;
-              const user = res.data.authentication.user;
+          if (stay) {
+            const cookies = new Cookies;
+            const token = res.data.authentication.token;
+            const user = res.data.authentication.user;
 
-              const cookie_expiration = new Date();
+            const cookie_expiration = new Date();
 
-              cookie_expiration.setTime(cookie_expiration.getTime() + (2419200 * 1000));
+            cookie_expiration.setTime(cookie_expiration.getTime() + (2419200 * 1000));
 
-              cookies.set('token', token, { path: `/`, expires: cookie_expiration });
-              cookies.set('user', user, { path: '/', expires: cookie_expiration });
-            }
-
-            dispatch(authSuccess(token, user));
-          } else {
-            dispatch(authFail('unregistered'))
+            cookies.set('token', token, { path: `/`, expires: cookie_expiration });
+            cookies.set('user', user, { path: '/', expires: cookie_expiration });
           }
+
+          dispatch(authSuccess(token, user));
         } else {
           dispatch(authFail(res.data))
         }
-
       })
       .catch(err => {
         dispatch(authFail(err));
       })
+  }
+}
+
+export const verifyOtp = (otp, phone) => {
+  return dispatch => {
+    dispatch(authStart());
+    axios.post(`${axiosparams.url}user/authenticate`, {
+      otp: otp,
+      phone: phone
+    }).then(res => {
+      if ((!res.data.error) && (res.data.message === "you are truly verified")) {
+        dispatch(authSuccess(null, null));
+      }
+    }).catch(error => {
+      dispatch(authFail(error))
+    })
   }
 }
 

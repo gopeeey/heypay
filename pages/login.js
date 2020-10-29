@@ -1,5 +1,5 @@
 import React from 'react';
-import { withStyles } from '@material-ui/core/styles';
+import { withStyles, makeStyles, withTheme } from '@material-ui/core/styles';
 import {
     Grid,
     Typography,
@@ -22,9 +22,21 @@ import { connect } from 'react-redux';
 import { authLogin } from '../actions';
 import { withRouter } from 'next/router';
 
+const useStylesTextField = theme => ({
+    root: {
+        '& .MuiOutlinedInput-root': {
+            '& fieldset': {
+                borderColor: theme.palette.grey[300],
+            },
+        },
+    },
+})
+const CustomTextField = withStyles(useStylesTextField)(TextField);
+
 const useStyles = theme => ({
     root: {
-        width: '100%'
+        width: '100%',
+        height: '100%'
     },
     contentRoot: {
         width: '100%',
@@ -41,7 +53,7 @@ const useStyles = theme => ({
     },
     sideImage: {
         width: '100%',
-        height: '100vh',
+        height: '100%',
         backgroundImage: "url('images/login_xlarge.jpg')",
         [theme.breakpoints.down('lg')]: {
             backgroundImage: "url('images/login_large.jpg')",
@@ -85,10 +97,13 @@ const useStyles = theme => ({
         maxWidth: '100%'
     },
     header: {
-        [theme.breakpoints.down('xs')]: {
-            fontSize: '250%',
-            fontWeight: 'bold'
-        }
+        fontWeight: 'bold',
+    },
+    subheader: {
+        textAlign: 'center'
+    },
+    spaceTop1: {
+        marginTop: theme.spacing(1)
     },
     spaceTop2: {
         marginTop: theme.spacing(2)
@@ -97,11 +112,15 @@ const useStyles = theme => ({
         marginTop: theme.spacing(3)
     },
     button: {
-        borderRadius: '3em',
         padding: theme.spacing(1, 8)
     },
     inputBox: {
-        width: '60%',
+        width: '40%',
+        padding: theme.spacing(3),
+        borderStyle: 'solid',
+        borderWidth: '1px',
+        borderColor: theme.palette.grey[300],
+        borderRadius: '0.5em',
         [theme.breakpoints.down('md')]: {
             width: '65%'
         },
@@ -113,7 +132,8 @@ const useStyles = theme => ({
         },
     },
     textfield: {
-        backgroundColor: theme.palette.grey[50],
+        borderColor: 'white'
+
     },
     link: {
         textDecoration: 'none',
@@ -123,6 +143,12 @@ const useStyles = theme => ({
         [theme.breakpoints.up('sm')]: {
             display: 'none',
         }
+    },
+    icon: {
+        width: '100%',
+        display: 'flex',
+        justifyContent: 'center',
+        padding: theme.spacing(1, 0)
     }
 });
 
@@ -133,7 +159,7 @@ class LoginPage extends React.PureComponent {
         password: null,
         phoneError: null,
         passwordError: null,
-        stay: false,
+        stay: false
     }
 
     changeVisibility = () => {
@@ -173,10 +199,22 @@ class LoginPage extends React.PureComponent {
 
     componentDidUpdate(prevProps) {
         if (prevProps !== this.props) {
-            if ((!this.props.loading) && (this.props.token)) {
-                const { router } = this.props;
-                router.push('')
+            if (!this.props.loading) {
+                if (this.state.verify) {
+
+                } else {
+
+                }
+                if (this.props.token) {
+                    const { router } = this.props;
+                    router.push('')
+                } else if (this.props.error) {
+                    if ((!this.props.error.error) && (!this.props.error.authentication.registered)) {
+
+                    }
+                }
             }
+
         }
     }
     render() {
@@ -207,66 +245,55 @@ class LoginPage extends React.PureComponent {
                     </Grid>
                     <Grid item xs={12} sm={8}>
                         <div className={classes.contentRoot}>
-                            <Typography variant="h3" color="primary" className={classes.header}>Merchant Login</Typography>
-                            <Typography
-                                variant="body1"
-                                color="textSecondary"
-                                className={classes.spaceTop2}>Login to your merchant dashboard.</Typography>
+                            <Typography variant="h4" color="primary" className={classes.header}>Merchant Login</Typography>
+
                             <form className={clsx(classes.spaceTop2, classes.inputBox)} onSubmit={this.handleSubmit}>
-                                <Grid container spacing={1} alignItems="flex-end" className={classes.spaceTop2}>
-                                    <Grid xs={2} md={1} item >
-                                        <PhoneAndroidIcon
-                                            color="disabled"
-                                            fontSize="large" />
-                                    </Grid>
-                                    <Grid xs={10} md={11} item>
-                                        <TextField
-                                            label="Phone"
-                                            name="phone"
-                                            variant="filled"
-                                            fullWidth
-                                            onChange={this.handleChange}
-                                            className={classes.textfield}
-                                            error={this.state.phoneError ? (true) : (false)}
-                                            helperText={this.state.phoneError}
-                                        />
-                                    </Grid>
-                                </Grid>
-                                <Grid container spacing={2} alignItems="flex-end" className={classes.spaceTop2}>
-                                    <Grid xs={2} md={1} item >
-                                        <LockIcon
-                                            color="disabled"
-                                            fontSize="large" />
-                                    </Grid>
-                                    <Grid xs={10} md={11} item>
-                                        <TextField
-                                            label="Password"
-                                            name="password"
-                                            variant="filled"
-                                            fullWidth
-                                            type={this.state.passwordVisibility ? "" : "password"}
-                                            className={classes.textfield}
-                                            onChange={this.handleChange}
-                                            InputProps={{
-                                                endAdornment: (
-                                                    <InputAdornment position="end">
-                                                        {this.state.passwordVisibility ? (
-                                                            <IconButton onClick={this.changeVisibility}>
-                                                                <VisibilityIcon color="disabled" />
-                                                            </IconButton>
-                                                        ) : (
-                                                                <IconButton onClick={this.changeVisibility}>
-                                                                    <VisibilityOffIcon color="disabled" />
-                                                                </IconButton>
-                                                            )}
-                                                    </InputAdornment>
-                                                )
-                                            }}
-                                            error={this.state.passwordError ? (true) : (false)}
-                                            helperText={this.state.passwordError}
-                                        />
-                                    </Grid>
-                                </Grid>
+                                <div className={classes.icon}>
+                                    <LockIcon fontSize="large" />
+                                </div>
+
+                                <Typography
+                                    variant="body2"
+                                    color="textSecondary"
+                                    className={clsx(classes.spaceTop1, classes.subheader)}>
+                                    Enter the phone number and password for your merchant account.
+                            </Typography>
+                                <CustomTextField
+                                    label="Phone"
+                                    name="phone"
+                                    variant="outlined"
+                                    fullWidth
+                                    onChange={this.handleChange}
+                                    className={clsx(classes.spaceTop3)}
+                                    error={this.state.phoneError ? (true) : (false)}
+                                    helperText={this.state.phoneError}
+                                />
+                                <CustomTextField
+                                    label="Password"
+                                    name="password"
+                                    variant="outlined"
+                                    fullWidth
+                                    type={this.state.passwordVisibility ? "" : "password"}
+                                    className={clsx(classes.spaceTop2, classes.textfield)}
+                                    onChange={this.handleChange}
+                                    InputProps={{
+                                        endAdornment: (
+                                            <InputAdornment position="end">
+                                                {this.state.passwordVisibility ? (
+                                                    <IconButton onClick={this.changeVisibility}>
+                                                        <VisibilityIcon color="disabled" />
+                                                    </IconButton>
+                                                ) : (
+                                                        <IconButton onClick={this.changeVisibility}>
+                                                            <VisibilityOffIcon color="disabled" />
+                                                        </IconButton>
+                                                    )}
+                                            </InputAdornment>
+                                        )
+                                    }}
+                                    error={this.state.passwordError ? (true) : (false)}
+                                    helperText={this.state.passwordError}
+                                />
                                 <FormGroup className={classes.spaceTop2} row>
                                     <FormControlLabel
                                         control={<Checkbox checked={this.state.stay} color="primary" onChange={this.handleChange} name="stay" />}
@@ -274,7 +301,7 @@ class LoginPage extends React.PureComponent {
                                     />
                                 </FormGroup>
                                 <Button
-                                    className={clsx(classes.spaceTop3, classes.button)}
+                                    className={clsx(classes.spaceTop2, classes.button)}
                                     variant="contained"
                                     color="primary"
                                     fullWidth
@@ -294,8 +321,8 @@ class LoginPage extends React.PureComponent {
                                     Don't have an account? <Link href="" passHref><a className={classes.link}>Signup</a></Link>
                                 </Typography>
                             </div>
-
                         </div>
+
                     </Grid>
                 </Grid>
             </div>

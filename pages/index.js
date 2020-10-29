@@ -22,7 +22,7 @@ class Index extends React.PureComponent {
     return (
       <div className={classes.root}>
         {user ? (
-          `You're logged in ${user.phone}`
+          `You're logged in as ${user.phone}`
         ) : (`You're not logged in yet`)}
       </div>
     )
