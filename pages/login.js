@@ -97,7 +97,7 @@ const useStyles = theme => ({
         maxWidth: '100%'
     },
     header: {
-        fontWeight: 'bold',
+        fontWeight: 'bold'
     },
     subheader: {
         textAlign: 'center'
