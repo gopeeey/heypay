@@ -12,6 +12,8 @@ import clsx from 'clsx';
 import AssessmentIcon from '@material-ui/icons/Assessment';
 import StorefrontIcon from '@material-ui/icons/Storefront';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
+import { useDispatch } from 'react-redux';
+import { authLogout } from '../actions';
 
 const drawerWidth = 240;
 
@@ -72,6 +74,11 @@ const listicons = [
 
 export default function MerchantDrawer(props) {
     const classes = useStyles();
+    const dispatch = useDispatch();
+
+    const logout = () => {
+        dispatch(authLogout());
+    }
 
     return (
         <Drawer
@@ -89,7 +96,11 @@ export default function MerchantDrawer(props) {
 
             <div className={classes.subheader}>
                 <Typography variant="button" color="textSecondary" >BUSINESS</Typography>
-                <Typography variant="h6" className={clsx(classes.spaceTop1, classes.subs)}>Firey Lion</Typography>
+                <Typography
+                    variant="h6"
+                    className={clsx(classes.spaceTop1, classes.subs)}
+                    noWrap
+                >{props.user ? (props.user.name) : ("Firey Lion")}</Typography>
             </div>
 
             <List>
@@ -109,6 +120,7 @@ export default function MerchantDrawer(props) {
                 ))}
                 <ListItem
                     button
+                    onClick={logout}
                     className={
                         classes.listItem
                     }>
