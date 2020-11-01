@@ -24,6 +24,8 @@ import LocalShippingIcon from '@material-ui/icons/LocalShipping';
 import HelpOutlineIcon from '@material-ui/icons/HelpOutline';
 import SettingsIcon from '@material-ui/icons/Settings';
 import Link from 'next/link';
+import { useDispatch } from 'react-redux';
+import { authLogout } from '../actions';
 
 const drawerWidth = 240;
 
@@ -117,6 +119,10 @@ const listicons = [
 
 export default function StoreDrawer(props) {
     const classes = useStyles();
+    const dispatch = useDispatch();
+    const logout = () => {
+        dispatch(authLogout());
+    }
     const store = props.store ? (props.store) : (null)
     return (
         <Drawer
@@ -180,6 +186,7 @@ export default function StoreDrawer(props) {
                     ))}
                 <ListItem
                     button
+                    onClick={logout}
                     className={
                         classes.listItem
                     }>
