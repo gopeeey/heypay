@@ -9,8 +9,8 @@ import {
 } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
 import clsx from 'clsx';
-import MerchantDrawer from '../../components/merchant_drawer';
-import StoresScreen from '../../components/merchant_screens/store';
+import StoreDrawer from '../../components/store_drawer';
+import { withRouter } from 'next/router';
 import { connect } from 'react-redux';
 
 const drawerWidth = 240;
@@ -18,7 +18,7 @@ const drawerWidth = 240;
 const useStyles = theme => ({
     root: {
         width: '100%',
-        display: 'flex',
+        display: 'flex'
     },
     appBar: {
         transition: theme.transitions.create(['margin', 'width'], {
@@ -78,11 +78,25 @@ const useStyles = theme => ({
     }
 })
 
-class MerchantDashboard extends React.PureComponent {
+class StoreDashboard extends React.PureComponent {
 
     state = {
         drawer: true,
-        displaying: 'Dashboard'
+        displaying: 'Dashboard',
+        store: null
+    }
+
+    componentDidMount() {
+        if (this.props.stores.length && this.props.router) {
+            for (let i = 0; i < this.props.stores.length; i++) {
+                if (this.props.stores[i]._id === this.props.router.query.store) {
+                    this.setState({
+                        store: this.props.stores[i]
+                    })
+                    break;
+                }
+            }
+        }
     }
 
     handleDrawerOpen = () => {
@@ -96,12 +110,94 @@ class MerchantDashboard extends React.PureComponent {
             displaying: screen
         })
     }
+
+    chooseScreen = () => {
+        switch (this.state.displaying) {
+
+            case "deliveries":
+                return (
+                    <div>
+                        This is your content for {this.state.displaying}, manage it for now.
+                    </div>
+                )
+
+            case "grow your sales":
+                return (
+                    <div>
+                        This is your content for {this.state.displaying}, manage it for now.
+                    </div>
+                )
+
+            case "menus":
+                return (
+                    <div>
+                        This is your content for {this.state.displaying}, manage it for now.
+                    </div>
+                )
+
+            case "business hours":
+                return (
+                    <div>
+                        This is your content for {this.state.displaying}, manage it for now.
+                    </div>
+                )
+
+            case "bank account":
+                return (
+                    <div>
+                        This is your content for {this.state.displaying}, manage it for now.
+                    </div>
+                )
+
+            case "payments":
+                return (
+                    <div>
+                        This is your content for {this.state.displaying}, manage it for now.
+                    </div>
+                )
+
+            case "manage employees":
+                return (
+                    <div>
+                        This is your content for {this.state.displaying}, manage it for now.
+                    </div>
+                )
+
+            case "request a delivery":
+                return (
+                    <div>
+                        This is your content for {this.state.displaying}, manage it for now.
+                    </div>
+                )
+
+            case "support":
+                return (
+                    <div>
+                        This is your content for {this.state.displaying}, manage it for now.
+                    </div>
+                )
+
+            case "settings":
+                return (
+                    <div>
+                        This is your content for {this.state.displaying}, manage it for now.
+                    </div>
+                )
+
+            default:
+                return (
+                    <div>
+                        This is your content for {this.state.displaying}, manage it for now.
+                    </div>
+                )
+        }
+    }
     render() {
         const { classes } = this.props;
         return (
             <>
                 {
-                    this.props.user ? (
+                    this.props.user && this.props.stores.length ? (
                         <div className={classes.root}>
                             <AppBar
                                 position="fixed"
@@ -126,9 +222,9 @@ class MerchantDashboard extends React.PureComponent {
                                     </Typography>
                                 </Toolbar>
                             </AppBar>
-                            <MerchantDrawer
+                            <StoreDrawer
                                 open={this.state.drawer}
-                                user={this.props.user}
+                                store={this.state.store}
                                 changeScreen={(screen) => { this.changeScreen(screen) }}
                                 displaying={this.state.displaying} />
                             <main
@@ -136,20 +232,12 @@ class MerchantDashboard extends React.PureComponent {
                                     [classes.contentShift]: this.state.drawer,
                                 })}>
                                 <div className={classes.drawerHeader} />
-                                {this.state.displaying === "Dashboard" ? (
-                                    <div>
-                                        This is your content for {this.state.displaying}, manage it for now.
-                                    </div>
-
-                                ) : (
-                                        <StoresScreen />
-                                    )}
+                                {this.chooseScreen()}
                             </main>
                         </div>
                     ) : (<div className={classes.spinner}>
                         <CircularProgress color="primary" />
-                    </div>
-                        )
+                    </div>)
                 }
             </>
         )
@@ -157,7 +245,8 @@ class MerchantDashboard extends React.PureComponent {
 }
 
 const mapStateToProps = (state) => ({
+    stores: state.stores,
     user: state.user
 })
 
-export default withStyles(useStyles)(connect(mapStateToProps, null)(MerchantDashboard));
+export default withStyles(useStyles)(withRouter(connect(mapStateToProps, null)(StoreDashboard)));

@@ -10,11 +10,12 @@ export const authStart = () => {
   }
 }
 
-export const authSuccess = (token, user) => {
+export const authSuccess = (token, user, stores) => {
   return {
     type: actionTypes.AUTH_SUCCESS,
     token: token,
-    user: user
+    user: user,
+    stores: stores
   }
 }
 
@@ -27,7 +28,9 @@ export const authFail = (error) => {
 
 export const authLogout = () => {
   const cookies = new Cookies;
-  cookies.remove('token');
+  cookies.remove('phone');
+  cookies.remove('password');
+  cookies.remove('account_type');
   return {
     type: actionTypes.AUTH_LOGOUT
   }
@@ -35,36 +38,40 @@ export const authLogout = () => {
 
 
 
-export const authLogin = (phone, password, stay) => {
-  return dispatch => {
-    dispatch(authStart());
-    axios.post(`${axiosparams.url}user/login`, {
-      phone: phone,
-      password: password
-    })
-      .then(res => {
-        if (!res.data.error) {
-          if (stay) {
-            const cookies = new Cookies;
+export const authLogin = (phone, password, stay, account_type) => {
+
+  if (account_type === "merchant") {
+    return dispatch => {
+      dispatch(authStart());
+      axios.post(`${axiosparams.url}user/login/vendor`, {
+        phone: phone.replace('0', '+234'),
+        password: password
+      })
+        .then(res => {
+          if (res.data.authentication.registered) {
             const token = res.data.authentication.token;
             const user = res.data.authentication.user;
+            const stores = [res.data.vendor,]
+            if (stay) {
+              const cookies = new Cookies;
+              const cookie_expiration = new Date();
 
-            const cookie_expiration = new Date();
+              cookie_expiration.setTime(cookie_expiration.getTime() + (2419200 * 1000));
 
-            cookie_expiration.setTime(cookie_expiration.getTime() + (2419200 * 1000));
+              cookies.set('phone', phone, { path: `/`, expires: cookie_expiration });
+              cookies.set('password', password, { path: '/', expires: cookie_expiration });
+              cookies.set('account_type', account_type, { path: `/`, expires: cookie_expiration });
+            }
 
-            cookies.set('token', token, { path: `/`, expires: cookie_expiration });
-            cookies.set('user', user, { path: '/', expires: cookie_expiration });
+            dispatch(authSuccess(token, user, stores));
+          } else {
+            dispatch(authFail(res.data))
           }
-
-          dispatch(authSuccess(token, user));
-        } else {
-          dispatch(authFail(res.data))
-        }
-      })
-      .catch(err => {
-        dispatch(authFail(err));
-      })
+        })
+        .catch(err => {
+          dispatch(authFail(err));
+        })
+    }
   }
 }
 
@@ -86,17 +93,15 @@ export const verifyOtp = (otp, phone) => {
 
 export const authCheckState = () => {
   return dispatch => {
+    dispatch(authStart());
     const cookies = new Cookies;
-    const token = cookies.get('token');
-    if ((token === null) || (token === undefined)) {
+    const phone = cookies.get('phone');
+    const password = cookies.get('password');
+    const account_type = cookies.get('account_type');
+    if (!phone && !password && !account_type) {
       dispatch(authFail('not logged in'));
     } else {
-      const user = cookies.get('user');
-      if (!user) {
-        dispatch(authFail('not logged in'));
-      } else {
-        dispatch(authSuccess(token, user));
-      }
+      dispatch(authLogin(phone, password, false, account_type));
     }
   }
 }

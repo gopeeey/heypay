@@ -159,7 +159,8 @@ class LoginPage extends React.PureComponent {
         password: null,
         phoneError: null,
         passwordError: null,
-        stay: false
+        stay: true,
+        login_error: null
     }
 
     changeVisibility = () => {
@@ -184,7 +185,7 @@ class LoginPage extends React.PureComponent {
                 this.setState({
                     passwordError: null
                 })
-                this.props.login(this.state.phone, this.state.password, this.state.stay)
+                this.props.login(this.state.phone, this.state.password, this.state.stay, "merchant")
             } else {
                 this.setState({
                     passwordError: 'Please enter your password'
@@ -194,6 +195,12 @@ class LoginPage extends React.PureComponent {
             this.setState({
                 phoneError: 'Please enter your phone number'
             })
+        }
+    }
+
+    componentDidMount() {
+        if (this.props.token) {
+            this.props.router.push(this.props.prevUrl)
         }
     }
 
@@ -207,10 +214,14 @@ class LoginPage extends React.PureComponent {
                 }
                 if (this.props.token) {
                     const { router } = this.props;
-                    router.push('')
+                    router.push('/merchant')
                 } else if (this.props.error) {
-                    if ((!this.props.error.error) && (!this.props.error.authentication.registered)) {
-
+                    if (this.props.error.authentication) {
+                        if (!this.props.error.authentication.registered) {
+                            this.setState({
+                                login_error: "Incorrect phone number or pin"
+                            })
+                        }
                     }
                 }
             }
@@ -251,6 +262,14 @@ class LoginPage extends React.PureComponent {
                                 <div className={classes.icon}>
                                     <LockIcon fontSize="large" />
                                 </div>
+
+                                {this.state.login_error ? (
+                                    <Typography
+                                        variant="body2"
+                                        color="error"
+                                        className={classes.subheader}>{this.state.login_error}</Typography>
+                                ) : (null)}
+
 
                                 <Typography
                                     variant="body2"
@@ -333,12 +352,13 @@ class LoginPage extends React.PureComponent {
 const mapStateToProps = state => ({
     loading: state.loading,
     token: state.token,
-    error: state.error
+    error: state.error,
+    prevUrl: state.prevUrl
 
 })
 
 const mapDispatchToProps = dispatch => ({
-    login: (phone, password, stay) => { dispatch(authLogin(phone, password, stay)) }
+    login: (phone, password, stay, account_type) => { dispatch(authLogin(phone, password, stay, account_type)) }
 })
 
 export default withStyles(useStyles)(withRouter(connect(mapStateToProps, mapDispatchToProps)(LoginPage)));

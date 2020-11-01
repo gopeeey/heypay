@@ -6,7 +6,7 @@ export const OSRegular = {
     src: `
     local('OpenSans-Regular'),
     local('OpenSans-Regular'),
-    url(${'fonts/OpenSans-Regular.woff'}) format('woff')
+    url(${'/fonts/OpenSans-Regular.woff'}) format('woff')
     `,
     unicodeRange:
         'U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF',
@@ -21,7 +21,7 @@ export const OSBold = {
     src: `
     local('OpenSans-Bold'),
     local('OpenSans-Bold'),
-    url(${'fonts/OpenSans-Bold.woff'}) format('woff')
+    url(${'/fonts/OpenSans-Bold.woff'}) format('woff')
     `,
     unicodeRange:
         'U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF',
@@ -36,7 +36,7 @@ export const OSBoldItalic = {
     src: `
     local('OpenSans-BoldItalic'),
     local('OpenSans-BoldItalic'),
-    url(${'fonts/OpenSans-BoldItalic.woff'}) format('woff')
+    url(${'/fonts/OpenSans-BoldItalic.woff'}) format('woff')
     `,
     unicodeRange:
         'U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF',
@@ -51,7 +51,7 @@ export const OSExtraBold = {
     src: `
     local('OpenSans-ExtraBold'),
     local('OpenSans-ExtraBold'),
-    url(${'fonts/OpenSans-ExtraBold.woff'}) format('woff')
+    url(${'/fonts/OpenSans-ExtraBold.woff'}) format('woff')
     `,
     unicodeRange:
         'U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF',
@@ -66,7 +66,7 @@ export const OSExtraBoldItalic = {
     src: `
     local('OpenSans-ExtraBoldItalic'),
     local('OpenSans-ExtraBoldItalic'),
-    url(${'fonts/OpenSans-ExtraBoldItalic.woff'}) format('woff')
+    url(${'/fonts/OpenSans-ExtraBoldItalic.woff'}) format('woff')
     `,
     unicodeRange:
         'U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF',
@@ -81,7 +81,7 @@ export const OSItalic = {
     src: `
     local('OpenSans-Italic'),
     local('OpenSans-Italic'),
-    url(${'fonts/OpenSans-Italic.woff'}) format('woff')
+    url(${'/fonts/OpenSans-Italic.woff'}) format('woff')
     `,
     unicodeRange:
         'U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF',
@@ -96,7 +96,7 @@ export const OSLight = {
     src: `
     local('OpenSans-Light'),
     local('OpenSans-Light'),
-    url(${'fonts/OpenSans-Light.woff'}) format('woff')
+    url(${'/fonts/OpenSans-Light.woff'}) format('woff')
     `,
     unicodeRange:
         'U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF',
@@ -111,7 +111,7 @@ export const OSLightItalic = {
     src: `
     local('OpenSans-LightItalic'),
     local('OpenSans-LightItalic'),
-    url(${'fonts/OpenSans-LightItalic.woff'}) format('woff')
+    url(${'/fonts/OpenSans-LightItalic.woff'}) format('woff')
     `,
     unicodeRange:
         'U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF',
@@ -126,7 +126,7 @@ export const OSSemiBold = {
     src: `
     local('OpenSans-SemiBold'),
     local('OpenSans-SemiBold'),
-    url(${'fonts/OpenSans-SemiBold.woff'}) format('woff')
+    url(${'/fonts/OpenSans-SemiBold.woff'}) format('woff')
     `,
     unicodeRange:
         'U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF',
@@ -141,7 +141,7 @@ export const OSSemiBoldItalic = {
     src: `
     local('OpenSans-SemiBoldItalic'),
     local('OpenSans-SemiBoldItalic'),
-    url(${'fonts/OpenSans-SemiBoldItalic.woff'}) format('woff')
+    url(${'/fonts/OpenSans-SemiBoldItalic.woff'}) format('woff')
     `,
     unicodeRange:
         'U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF',
