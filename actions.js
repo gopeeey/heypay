@@ -2,6 +2,7 @@ import * as actionTypes from './types';
 import axios from 'axios';
 import Cookies from 'universal-cookie';
 import { axiosparams } from './axiosparams';
+import { getDisplayDate } from '@material-ui/pickers/_helpers/text-field-helper';
 
 //AUTH ACTIONS
 export const authStart = () => {
@@ -13,16 +14,16 @@ export const authStart = () => {
 export const authSuccess = (token, user, stores) => {
   return {
     type: actionTypes.AUTH_SUCCESS,
-    token: token,
-    user: user,
-    stores: stores
+    token,
+    user,
+    stores
   }
 }
 
 export const authFail = (error) => {
   return {
     type: actionTypes.AUTH_FAIL,
-    error: error
+    error
   }
 }
 
@@ -36,6 +37,29 @@ export const authLogout = () => {
   }
 }
 
+//OTP ACTIONS
+export const otpStart = () => ({
+  type: actionTypes.OTP_START
+})
+
+export const otpSendSuccess = (otp) => ({
+  type: actionTypes.OTP_SEND_SUCCESS,
+  otp
+})
+
+export const otpVerifySuccess = () => ({
+  type: actionTypes.OTP_VERIFY_SUCCESS
+})
+
+export const otpFail = (error) => ({
+  type: actionTypes.OTP_FAIL,
+  error
+})
+
+export const otpClear = () => ({
+  type: actionTypes.OTP_CLEAR
+})
+
 
 
 export const authLogin = (phone, password, stay, account_type) => {
@@ -44,7 +68,7 @@ export const authLogin = (phone, password, stay, account_type) => {
     return dispatch => {
       dispatch(authStart());
       axios.post(`${axiosparams.url}user/login/vendor`, {
-        phone: phone.replace('0', '+234'),
+        phone: phone.startsWith('0') ? (phone.replace('0', '+234')) : (phone),
         password: password
       })
         .then(res => {
@@ -75,18 +99,67 @@ export const authLogin = (phone, password, stay, account_type) => {
   }
 }
 
-export const verifyOtp = (otp, phone) => {
+export const authSignup = (otp, name, dob, password, phone, email) => {
   return dispatch => {
     dispatch(authStart());
-    axios.post(`${axiosparams.url}user/authenticate`, {
-      otp: otp,
-      phone: phone
+    axios.post(`${axiosparams.url}user/signup`, {
+      otp,
+      name,
+      dab: dob,
+      password,
+      phone: phone.startsWith('0') ? (phone.replace('0', '+234')) : (phone),
+      email
     }).then(res => {
-      if ((!res.data.error) && (res.data.message === "you are truly verified")) {
-        dispatch(authSuccess(null, null));
+      if (!res.data.error) {
+        dispatch(authSuccess(res.data.authentication.token, res.data.authentication.user, null));
+      } else {
+        dispatch(authFail(res.data))
       }
     }).catch(error => {
       dispatch(authFail(error))
+    })
+  }
+}
+
+export const sendOtp = (phone) => {
+  return dispatch => {
+    dispatch(otpStart());
+    axios.post(`${axiosparams.url}user/login`, {
+      phone: phone.startsWith('0') ? (phone.replace('0', '+234')) : (phone),
+      password: 1234
+    }).then(res => {
+      if (!res.data.error) {
+        if (!res.data.authentication.registered) {
+          dispatch(otpSendSuccess(res.data.authentication.timeOtp));
+        } else {
+          dispatch(otpFail({
+            error: true,
+            message: "registered"
+          }))
+        }
+      } else {
+        dispatch(otpFail(res.data));
+      }
+    }).catch(error => {
+      dispatch(otpFail(error));
+    })
+  }
+}
+
+export const verifyOtp = (otp, phone) => {
+  return dispatch => {
+    dispatch(otpStart());
+    axios.post(`${axiosparams.url}user/authenticate`, {
+      otp: otp,
+      phone: phone.startsWith('0') ? (phone.replace('0', '+234')) : (phone)
+    }).then(res => {
+      if ((!res.data.error) && (res.data.message === "You are truly verified.")) {
+        dispatch(otpVerifySuccess());
+      } else {
+        dispatch(otpFail(res.data))
+      }
+    }).catch(error => {
+      dispatch(otpFail(error));
     })
   }
 }
