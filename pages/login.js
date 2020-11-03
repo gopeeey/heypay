@@ -139,6 +139,10 @@ const useStyles = theme => ({
         textDecoration: 'none',
         color: theme.palette.link.main
     },
+    linkButton: {
+        textDecoration: 'none',
+        color: 'inherit'
+    },
     notPhoneHide: {
         [theme.breakpoints.up('sm')]: {
             display: 'none',
@@ -245,12 +249,16 @@ class LoginPage extends React.PureComponent {
                                 <Typography variant="body1" color="secondary" className={classes.spaceTop2}>
                                     Don't have an account?
                                 </Typography>
-                                <Button
-                                    variant="outlined"
-                                    color="secondary"
-                                    className={clsx(classes.button, classes.spaceTop2)}>
-                                    Signup
-                                </Button>
+                                <Link href="/signup" as="/signup">
+                                    <a className={classes.linkButton}>
+                                        <Button
+                                            variant="outlined"
+                                            color="secondary"
+                                            className={clsx(classes.button, classes.spaceTop2)}>
+                                            Signup
+                                        </Button>
+                                    </a>
+                                </Link>
                             </div>
                         </div>
                     </Grid>
